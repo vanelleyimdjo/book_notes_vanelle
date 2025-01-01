@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles/main.css" />
+    <title>Home</title>
+  </head>
+  <body>
+    <%- include ("partials/header.ejs") %>
+
+    <section class="section_vue" action="/home">
+      <header><b> WELCOME TO MY BOOKS COLLECTION - VANELLE YIMDJO</b></header>
+      <h1>Books I've READ</h1>
+      <p>
+        Tiny summary but <strong> detailed notes for each</strong> . Use the
+        ISBN number to find it from your local library or anywhere else.
+        <strong> This page will constantly update as I read more</strong>, so
+        bookmark it if you want to check back in a few months.
+      </p>
+      <div class="forms">
+        <form action="/add" method="get">
+          <button type="submit" class="button-wrapper">Add New Book</button>
+        </form>
+        <form action="/sort" method="post" class="sortSection">
+          <select name="sort" id="sort">
+            <option selected>Sort Books</option>
+            <option value="id">Sort By ID</option>
+            <option value="rating">Sort By Rating</option>
+            <option value="title">Sort By Book Title</option>
+            <option value="date_read">Sort By Date Read</option>
+          </select>
+        </form>
+      </div>
+    </section>
+    <hr />
+    <section class="section_index">
+      <% if (locals.books){ %> <% books.forEach((book,index) => { %>
+
+      <section class="book">
+        <img src="<%=bookCovers[index]%>" alt="Book cover" loading="lazy" />
+        <h2>
+          <a
+            class="submitFormLink"
+            data-formid="myForm<%= index %>"
+            data-booktitle="<%= book.title %>"
+            href="/book/<%=shortenBookTitle(book.title)%>"
+            name="title"
+            value="<%=book.title%>"
+          >
+            <%= book.title %> - BY <%=book.author%>
+          </a>
+        </h2>
+        <input type="hidden" name="id" value="<%=book.id%>" />
+        <small
+          >Date read: <span><%= book.date_read %></span>, How strongly I
+          recommend it: <strong><%= book.rating %></strong>/10
+        </small>
+        <p name="id" value="<%= book.id %>"><%=book.review%></p>
+        <a
+          class="notes submitFormLink"
+          data-formid="myForm<%= index %>"
+          data-booktitle="<%= book.title %>"
+          href="/book/<%=shortenBookTitle(book.title)%>"
+          name="title"
+          value="<%=book.title%>"
+          >Read my Notes</a
+        >
+      </section>
+
+      <%}); %> <%} else{ %>
+      <h1>No books found.</h1>
+    </section>
+    <% } %> <%- include ('partials/footer.ejs') %>
+  </body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      .review_edit {
+        padding: 0.6em 2em;
+        border: none;
+        outline: none;
+        color: rgb(255, 255, 255);
+        background: #111;
+        cursor: pointer;
+        position: relative;
+        z-index: 0;
+        border-radius: 10px;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      .review_edit::before {
+        content: "";
+        background: linear-gradient(
+          45deg,
+          #ff0000,
+          #ff7300,
+          #fffb00,
+          #48ff00,
+          #00ffd5,
+          #002bff,
+          #7a00ff,
+          #ff00c8,
+          #ff0000
+        );
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        background-size: 400%;
+        z-index: -1;
+        filter: blur(5px);
+        -webkit-filter: blur(5px);
+        width: calc(100% + 4px);
+        height: calc(100% + 4px);
+        animation: glowing-button-85 20s linear infinite;
+        transition: opacity 0.3s ease-in-out;
+        border-radius: 10px;
+      }
+      .review_edit:after {
+        z-index: -1;
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #222;
+        left: 0;
+        top: 0;
+        border-radius: 10px;
+      }
+      .section_vue {
+        max-width: 40em;
+        margin: 0 auto;
+        padding: 35px;
+        font-family: Georgia, serif;
+        font-size: 18px;
+        line-height: 30px;
+      }
+      .section_index {
+        position: absolute; /* postulat de départ */
+        top: 80%;
+        left: 50%; /* à 50%/50% du parent référent */
+        transform: translate(
+          -50%,
+          -50%
+        ); /* décalage de 50% de sa propre taille */
+      }
+    </style>
+    <title>Edit notes</title>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <section class="section_vue">
+      <header><b> WELCOME my Books Notes!</b></header>
+      <span id="notes">
+        <form action="/edit" method="post">
+          <input type="hidden" name="id" value="<%=selectedBook.id%>" />
+          <img src="<%= bookCover %>" alt="Book cover" />
+          <h1><%=selectedBook.title%> - BY <%= selectedBook.author %></h1>
+          <small>ISBN: <span><%=selectedBook.isbn%></span></small
+          ><br />
+          <small>Date read: <span> <%=selectedBook.date_read%></span></small
+          ><br />
+          <small
+            >How strongly I recommend it:
+            <span><%=selectedBook.rating%></span>/10</small
+          ><br /><br />
+          <strong
+            >(See <a href="/home">my list of all books</a>, for more. Or
+            <a
+              target="_blank"
+              href="https://openlibrary.org/isbn/<%= selectedBook.isbn %>"
+              >Visit book page</a
+            >
+            )</strong
+          >
+          <div class="review">
+            <p><%= selectedBook.review %></p>
+            <br />
+            <button type="submit" class="review_edit">Edit Review</button>
+          </div>
+        </form>
+        <hr />
+      </span>
+    </section>
+    <section class="section_index">
+      <% if(locals.notes.length > 0){ %> <% notes.forEach(note => { %>
+      <form
+        action="/delete/<%=note.note_id%>"
+        method="post"
+        class="delete-form"
+      >
+        <p><%=note.note_description%></p>
+        <input type="hidden" name="route" value="<%=note.route%>" />
+        <button class="delete" type="submit">Delete</button>
+      </form>
+      <hr />
+      <%});}else{ %>
+      <p>no notes were found.</p>
+      <% } %> <%- include('partials/footer') %>
+    </section>
+  </body>
+</html>
